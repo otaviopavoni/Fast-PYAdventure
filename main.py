@@ -154,10 +154,25 @@ def quest():
 
 quantidade_kills = 0
 
+total_kills = 0
+kills_aranhas = 0
+kills_ursos = 0
+kills_escorpioes = 0
+kills_dragoes_verdes = 0
+kills_dragoes_pretos = 0
+
+# total_kills, kills_aranhas, kills_ursos, kills_escorpioes, kills_dragoes_verdes, kills_dragoes_pretos
+
 def combate(monstro):
       global monstro_quest
       global quantidade_kills
       global recompensa
+      global total_kills
+      global kills_aranhas
+      global kills_ursos
+      global kills_escorpioes
+      global kills_dragoes_verdes
+      global kills_dragoes_pretos
 
       print(f"Você está lutando com {monstro}!")
       hp_player = player['hitpoints'] * player['level']
@@ -174,6 +189,7 @@ def combate(monstro):
                 avancar_level()
                 print(f"\nParabéns! Você atingiu o level {player['level']}!")
             if hp_monstro <= 0:
+                  total_kills += 1
                   print(f"Parabéns! Você matou o monstro {monstro}!")
                   if monstro == monstro_quest:
                         quantidade_kills += 1
@@ -187,18 +203,23 @@ def combate(monstro):
                   if monstro == 'Aranha':
                         moedas_ganhas = randint(25, 250)
                         player['coins'] += moedas_ganhas
+                        kills_aranhas += 1
                   elif monstro == 'Escorpião':
                         moedas_ganhas = randint(250, 1000)
                         player['coins'] += moedas_ganhas
+                        kills_escorpioes += 1
                   elif monstro == 'Urso':
                         moedas_ganhas = randint(1000, 2500)
                         player['coins'] += moedas_ganhas
+                        kills_ursos += 1
                   elif monstro == 'Dragão verde':
                         moedas_ganhas = randint(2500, 10000)
                         player['coins'] += moedas_ganhas
+                        kills_dragoes_verdes += 1
                   elif monstro == 'Dragão preto':
                         moedas_ganhas = randint(10000, 25000)
                         player['coins'] += moedas_ganhas
+                        kills_dragoes_pretos += 1
 
                   print(f"Você ganhou {moedas_ganhas} moedas. Total de moedas: {player['coins']}")
                   break
@@ -240,14 +261,20 @@ def resposta_combate():
         else:
               print("Digite uma resposta válida.")
               resposta_combate()
+
+def escrever_arquivo_com_dados():
+      with open("personagem.txt", "w") as personagem:
+            personagem.write(f"Nome: {player['nome']}\nLevel: {player['level']}\nHitpoint: {player['hitpoints']}\nXP: {player['xp']}\nQI: {player['qi']}\nMoedas: {player['coins']}\nEspada: {player['sword']}\nArmadura: {player['armour']}\nBoost de ataque: {player['attack_boost']}\nBoost de defesa: {player['defense_boost']}")
       
+      with open("estatisticas.txt", "w") as kills:
+            kills.write(f"Total de mobs matados: {total_kills}\nTotal de aranhas matados: {kills_aranhas}\nTotal de Ursos matados: {kills_ursos}\nTotal de escorpiões matados: {kills_escorpioes}\nTotal de dragões verdes matados: {kills_dragoes_verdes}\nTotal de dragões pretos matados: {kills_dragoes_pretos}")
+
 def ver_personagem():
       print(f"\nNome: {player['nome']}")
       print(f"Level: {player['level']}")
       print(f"Hitpoints: {player['hitpoints']}")
       print(f"XP: {player['xp']}")
       print(f"QI: {player['qi']}")
-      print(f"Hitpoints: {player['hitpoints']}")
       print(f"Moedas: {player['coins']}")
       print(f"Espada: {player['sword']}")
       print(f"Armadura: {player['armour']}")
@@ -286,6 +313,7 @@ def jogar():
     print("Bem-vindo a Fast PYAdventure. Esse é um jogo estilo RPG em terminal.\n")
     criar_personagem()
     while True:
+      escrever_arquivo_com_dados()
       opcoes()
 
 jogar()
